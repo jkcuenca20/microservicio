@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mi-deployment
+  namespace: jessica-cuenca-dev
+  labels:
+    app: mi-app
+    areanegocio: tecnologia
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mi-app
+  template:
+    metadata:
+      labels:
+        app: mi-app
+    spec:
+      containers:
+        - name: contenedor-principal
+          image: jkcuenca20/hola-mundo-clase123:build-{{ tag }}  # <-- Reemplaza con la imagen que quieras usar
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "800Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1500Mi"
+          envFrom:
+            - configMapRef:
+                name: mi-configmap
+            - secretRef:
+                name: mi-secret
+          volumeMounts:
+            - name: datos
+              mountPath: "/app/data"
+      volumes:
+        - name: datos
+          persistentVolumeClaim:
+            claimName: mi-pvc2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mi-servicio
+  namespace: jessica-cuenca-dev  # Asegúrate de que coincida con tu Deployment
+spec:
+  selector:
+    app: mi-app  # Debe coincidir con las labels del Deployment
+  ports:
+    - protocol: TCP
+      port: 4000        # Puerto del Service
+      targetPort: 3000  # Puerto del contenedor
+  type: ClusterIP     # Cambia a NodePort o LoadBalancer si quieres acceso externo
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mi-configmap
+  namespace: jessica-cuenca-dev
+data:
+  DATABASE: "192.168.1.1"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mi-secret
+  namespace: jessica-cuenca-dev
+type: Opaque
+data:
+  PASSWORD: aG9sYQ==
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: mi-hpa
+  namespace: jessica-cuenca-dev
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: deployment
+    name: mi-deployment
+  minReplicas: 2
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 100
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mi-pvc2
+  namespace: jessica-cuenca-dev
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: gp3
