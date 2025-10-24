@@ -67,4 +67,5 @@ jobs:
         run: |
           oc project jessica-cuenca-dev
           oc apply -f oc.yaml
+          oc rollout status deployment/mi-deployment2
           echo "Despliegue correcto"
