@@ -26,7 +26,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ secrets.DOCKERHUB_USERNAME  }}/hola-mundo-clase123
+          images: ${{ secrets.DOCKERHUB_USERNAME  }}/jkcuenca20-holamundomicroservicio
           tags: |
             type=ref,event=branch
             type=sha
