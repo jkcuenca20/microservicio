@@ -62,13 +62,13 @@ jobs:
         env:
           TAG:  build-${{ github.run_number }}
         run: |
-          envsubst < curso/oc.yaml > curso/oc.tmp
-          mv curso/oc.tmp curso/oc.yaml
-          cat curso/oc.yaml
+          envsubst < oc.yaml > oc.tmp
+          mv oc.tmp oc.yaml
+          cat oc.yaml
 
 
       - name: Deploy files
         run: |
           oc project jessica-cuenca-dev
-          oc apply -f curso/oc.yaml
+          oc apply -f oc.yaml
           echo "Despliegue correcto"
