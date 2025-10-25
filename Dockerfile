@@ -11,7 +11,7 @@ COPY app.py .
 
 # Instala Flask
 RUN pip install flask
-RUN groupadd -r appgroup && useradd -r -g appgroup appus
+#RUN groupadd -r appgroup && useradd -r -g appgroup appus
 RUN chown -R appuser:appgroup /app
 
 USER appuser
