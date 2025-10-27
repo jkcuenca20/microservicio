@@ -4,17 +4,17 @@ metadata:
   name: mi-deployment-2
   namespace: jessica-cuenca-dev
   labels:
-    app: mi-app
+    app: mi-app-2
     areanegocio: tecnologia
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: mi-app
+      app: mi-app-2
   template:
     metadata:
       labels:
-        app: mi-app
+        app: mi-app-2
     spec:
       containers:
         - name: contenedor-principal
@@ -45,11 +45,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mi-servicio
+  name: mi-servicio-2
   namespace: jessica-cuenca-dev  # Asegúrate de que coincida con tu Deployment
 spec:
   selector:
-    app: mi-app  # Debe coincidir con las labels del Deployment
+    app: mi-app-2  # Debe coincidir con las labels del Deployment
   ports:
     - protocol: TCP
       port: 4000        # Puerto del Service
