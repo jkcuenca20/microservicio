@@ -1,4 +1,4 @@
-name: CI-DockerBuild
+name: CI-Pipelines
 
 on: 
   push:
@@ -9,5 +9,5 @@ jobs:
   build-and-deploy:
     uses: jkcuenca20/devopsPipelines/.github/workflows/main.yml@main
     with:
-      docker_image_name: holamicroservicionew
+      docker_image_name: hola-mundo-clase123
     secrets: inherit
